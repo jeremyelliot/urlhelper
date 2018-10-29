@@ -1,0 +1,9 @@
+/nbproject
+/node_modules
+/vendor
+/.idea
+/.vscode
+/.vagrant
+npm-debug.log
+.env
+.phpunit.result.cache
