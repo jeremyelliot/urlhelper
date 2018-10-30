@@ -6,7 +6,7 @@ $loader = require __DIR__ . '/../vendor/autoload.php';
 $loader->addPsr4('UrlHelper\\', __DIR__);
 
 use \PHPUnit\Framework\TestCase;
-use \UrlHelper\UrlHelper;
+use \JeremyElliot\UrlHelper;
 
 class UrlHelperTest extends TestCase
 {

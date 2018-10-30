@@ -1,6 +1,6 @@
 <?php
 
-namespace UrlHelper;
+namespace JeremyElliot;
 
 /**
  * UrlHelper provides a wrapper for URLs.
