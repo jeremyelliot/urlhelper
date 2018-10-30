@@ -69,6 +69,22 @@ class UrlHelper
     }
 
     /**
+     * Resolves dot segments like /../ and /./ from path
+     *
+     * @return UrlHelper
+     */
+    public function getNormalised() : ?UrlHelper
+    {
+        // replace occurences of /./ with /
+        $path = \preg_replace('|/(\./)+|', '/', $this->getPart('dir'));
+        do { // remove /../ until no more match
+            $replaced = 0;
+            $path = \preg_replace('|[^/]+/\.\./|', '', $path, -1, $replaced);
+        } while ($replaced > 0);
+        return new UrlHelper($this->get('base') . $path . $this->get('file.ext.query.fragment'));
+    }
+
+    /**
      * Return true if this is an absolute URL
      *
      * @return bool
@@ -158,7 +174,6 @@ class UrlHelper
      *      'dir', 'file', 'ext', 'query', 'fragment'
      *
      * The shortcut-part 'base' cannot be used with this method
-     * @see UrlHelper::get($expression)
      *
      * @param string $part name of a URL part
      * @return string part of this URL

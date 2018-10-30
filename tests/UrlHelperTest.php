@@ -3,7 +3,7 @@
 namespace Tests\Unit;
 
 $loader = require __DIR__ . '/../vendor/autoload.php';
-$loader->addPsr4('UrlHelper\\', __DIR__);
+$loader->addPsr4('JeremyElliot\\', __DIR__);
 
 use \PHPUnit\Framework\TestCase;
 use \JeremyElliot\UrlHelper;
@@ -24,7 +24,17 @@ class UrlHelperTest extends TestCase
             'absoluteFragment' => 'https://openweb.co.nz/foo/bar#fragment',
             'relativeFragment' => '/foo/bar#fragment',
             'absoluteSlash' => 'https://openweb.co.nz/foo/bar/',
-            'absoluteSlashFragment' => 'https://openweb.co.nz/foo/bar/#fragment'
+            'absoluteSlashFragment' => 'https://openweb.co.nz/foo/bar/#fragment',
+            'normalise' => [
+                    '//localhost/home/./fish/./.foo/././././carp/eyes.jpg?rubbish=1'
+                        => '//localhost/home/fish/.foo/carp/eyes.jpg?rubbish=1',
+                    '//localhost/home/./fish/../.foo/../../toys/../carp/eyes.jpg?rubbish=1'
+                        => '//localhost/carp/eyes.jpg?rubbish=1',
+                    '/home/time../../time../time/../foo././././bar.baz?abc=...etc.#fish'
+                        => '/home/time../foo./bar.baz?abc=...etc.#fish',
+                    'https://example.com/index.html'
+                        => 'https://example.com/index.html'
+            ]
         ];
     }
 
@@ -183,5 +193,15 @@ class UrlHelperTest extends TestCase
             'php',
             (string) (new UrlHelper($this->urlStrings['allParts']))->get('ext')
         );
+    }
+
+    public function testNormalisePath()
+    {
+        foreach ($this->urlStrings['normalise'] as $original => $normal) {
+            self::assertEquals(
+                $normal,
+                (string) (new UrlHelper($original))->getNormalised()
+            );
+        }
     }
 }
