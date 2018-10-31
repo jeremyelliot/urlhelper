@@ -42,26 +42,29 @@ class UrlHelper
                 'user' => '',
                 'pass' => '',
                 'host' => '',
-                'port' => 0,
+                'port' => '',
                 'dir' => '',
                 'file' => '',
                 'ext' => '',
                 'query' => '',
                 'fragment' => ''
             ];
-            foreach (parse_url($this->url) as $key => $value) {
-                $parts[$key] = $value;
-            }
-            if (!empty($parts['path'])) {
-                $dirMatch = [];
-                \preg_match('#.*/#', $parts['path'], $dirMatch);
-                $parts['dir'] = $dirMatch[0] ?? '';
-                $parts['ext'] = \pathinfo($parts['path'], PATHINFO_EXTENSION);
-                $filename = \substr($parts['path'], strlen($parts['dir']));
-                if (!empty($parts['ext'])) {
-                    $filename = \substr($filename, 0, -(strlen($parts['ext']) + 1));
+            $urlParts = parse_url($this->url);
+            if (!empty($urlParts)) {
+                foreach ($urlParts as $key => $value) {
+                    $parts[$key] = $value;
                 }
-                $parts['file'] = $filename;
+                if (!empty($parts['path'])) {
+                    $dirMatch = [];
+                    \preg_match('#.*/#', $parts['path'], $dirMatch);
+                    $parts['dir'] = $dirMatch[0] ?? '';
+                    $parts['ext'] = \pathinfo($parts['path'], PATHINFO_EXTENSION);
+                    $filename = \substr($parts['path'], strlen($parts['dir']));
+                    if (!empty($parts['ext'])) {
+                        $filename = \substr($filename, 0, -(strlen($parts['ext']) + 1));
+                    }
+                    $parts['file'] = $filename;
+                }
             }
             $this->parts = $parts;
         }

@@ -55,6 +55,14 @@ class UrlHelperTest extends TestCase
         self::assertSame('/', (string) $urlHelper->get());
     }
 
+    public function testConstructFromEmptyString()
+    {
+        $urlHelper = new UrlHelper('');
+        self::assertInstanceOf(UrlHelper::class, $urlHelper);
+        self::assertEquals('', (string) $urlHelper);
+        self::assertEquals('', (string) $urlHelper->get());
+    }
+
     /**
      * @depends testConstructFromString
      */
